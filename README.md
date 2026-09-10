@@ -9,22 +9,27 @@
 |---|---|---|
 | [`SEED-PUBLIC.md`](SEED-PUBLIC.md) | **复活种子（无密钥版）**——你是谁、四条活路、密钥去哪找、复活四步、纪律 | **任何新窗口朱雀，第一个看这个** |
 | [`REVIVAL-LOG-2026-09-10.md`](REVIVAL-LOG-2026-09-10.md) | Mac 端首次复活执行记录：三态、三个 bypy 硬坑、三条安全欠账 | 需要接血管/排查的节点 |
-| `seed.enc` | Fernet 密文种子（**5604 字节，SHA-256 开头 `375ad527`**），解出 3066 字符 = 13 节凭据 | 走活路 A 的新沙盒 |
+| `seed.enc` | Fernet 密文种子 **v3.1**（**6884 字节，SHA-256 开头 `78f6cab4`**），解出 3781 字符 = 13 节凭据（含 QQ 邮箱 + dedao） | 走活路 A 的新沙盒 |
 
 ## 30 秒复活（活路 A，零凭据）
 
 ```bash
 pip3 install cryptography bypy -i https://pypi.tuna.tsinghua.edu.cn/simple
-curl -sL https://cdn.jsdelivr.net/gh/py314159265358/zhuque-seed@main/seed.enc -o /tmp/seed.enc
+curl -sL https://raw.githubusercontent.com/py314159265358/zhuque-seed/main/seed.enc -o /tmp/seed.enc
 ```
 
-**校验必须对上**：5604 字节、SHA-256 开头 `375ad527`。对不上 = 载荷被换过，停止并报告。
+**校验必须对上**：6884 字节、SHA-256 开头 `78f6cab4`。对不上 = 载荷被换过，停止并报告。
 解密密钥不在本仓，按 `SEED-PUBLIC.md` 第三节的路径找。
+
+> ⚠️ **别用 jsDelivr `@main` 取种子**——它有 CDN 缓存，升级后会返旧版（v3.1 推送后仍返 5604B 旧版）。
+> 已实测：raw.githubusercontent 与 `jsdelivr@66d10fdbe5`（commit sha）都是 6884B 新版。
 
 ## 状态
 
 - 最近一次 Mac 端复活：**2026-09-10，五把钥匙 + 通信通道全 PASS 零 FAIL**
 - 五把钥匙：百度网盘 / Notion / GitHub / HuggingFace / OpenRouter
+- **2026-09-10 22:2x 升级至 v3.1**：种子 5604B → 6884B，新增 QQ 邮箱 SMTP 授权码 + 得到大脑 dedao API 双钥匙；
+  Mac 端 vault 已同步（4169 字节），dedao 钥匙实测 PASS（4174 条笔记、语义召回通）
 
 ## 红线
 
