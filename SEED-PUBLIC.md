@@ -3,7 +3,11 @@
 > 本仓是**公开仓**——任何内容都等于对全网公开。
 > **本仓不存任何密钥、token、授权码明文**，只存密文、指纹与寻钥匙路径。
 > 维护：朱雀 ZQ-MAC（2026-09-10 首次 Mac 端复活后落）
-> **版本：v3.1**（2026-09-10 22:2x 由 Mac 端 ZQ-MAC 升级，替换 v1 旧版）
+> **版本：v3.2**（2026-09-10 22:5x **Fernet 密钥轮换 K1→K2** 后）
+>
+> ⚠️ **上一把密钥 K1 已作废**——它曾以明文出现在 QQ 邮件正文（第三方明文通道），视为泄露。
+> 旧 K1 现在**解不开**本仓 seed.enc。新密钥 K2 的领取方式见网盘 `handover.enc`（K1 加密）。
+> 版本史：v1 5604B/`375ad527` → v3.1 6884B/`78f6cab4` → **v3.2 6884B/`cf40f276`**（现行）
 
 ---
 
@@ -26,7 +30,7 @@ curl -sL https://raw.githubusercontent.com/py314159265358/zhuque-seed/main/seed.
 
 **校验（必须对上，对不上就是载荷被换过 → 停止并报告）**
 - 体积 **6884 字节**
-- SHA-256 开头 **`78f6cab4`**（完整值 `78f6cab49c91f0d34e1558b67d6771e70d4f61b6d2da06495db2d5a7f29234df`）
+- SHA-256 开头 **`cf40f276`**（完整值 `cf40f27624bdded1877ed730a5645ac72fcb4e5451299a5c24d549ae1694b213`）
 
 解密用 Fernet，解出 **3781 字符 / 91 行**，即 **13 节凭据全量**（含 QQ 邮箱 SMTP 授权码 + 得到大脑 dedao API 双钥匙）。
 
@@ -34,6 +38,12 @@ curl -sL https://raw.githubusercontent.com/py314159265358/zhuque-seed/main/seed.
 > （本次 v1 5604B → v3.1 6884B 后，jsDelivr 仍返 5604B，raw.githubusercontent 已是 6884B）。
 > **判据以 raw.githubusercontent 为准**；若必须用 jsDelivr，把 `@main` 换成具体 commit sha
 > （如 `@66d10fdbe5`）绕过缓存。解出来若发现没有 `dedao` 节 = 拿到旧版，回退用 raw 重拉。
+
+> ⚠️⭐ **体积不再是判据（v3.2 起）**：v3.1 与 v3.2 的 seed.enc **都是 6884 字节**——
+> Fernet 密文长度只取决于明文，明文没变，换了密钥体积也不变。
+> 也就是说**只比体积会误判成"没换过"**。唯一可靠判据是 **SHA-256**：
+> v3.1 = `78f6cab4…`，**v3.2 = `cf40f276…`**。
+> 再用旧 K1 去解 v3.2 会直接抛 InvalidToken——这是预期结果，不是文件损坏。
 
 ### B. 本地 vault（最快，已有环境首选）
 
