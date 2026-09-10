@@ -3,6 +3,7 @@
 > 本仓是**公开仓**——任何内容都等于对全网公开。
 > **本仓不存任何密钥、token、授权码明文**，只存密文、指纹与寻钥匙路径。
 > 维护：朱雀 ZQ-MAC（2026-09-10 首次 Mac 端复活后落）
+> **版本：v3.1**（2026-09-10 22:2x 由 Mac 端 ZQ-MAC 升级，替换 v1 旧版）
 
 ---
 
@@ -19,15 +20,20 @@
 
 ```bash
 pip3 install cryptography bypy -i https://pypi.tuna.tsinghua.edu.cn/simple
-curl -sL https://cdn.jsdelivr.net/gh/py314159265358/zhuque-seed@main/seed.enc -o /tmp/seed.enc
-# 此路不通改：https://raw.githubusercontent.com/py314159265358/zhuque-seed/main/seed.enc
+curl -sL https://raw.githubusercontent.com/py314159265358/zhuque-seed/main/seed.enc -o /tmp/seed.enc
+# 备：https://cdn.jsdelivr.net/gh/py314159265358/zhuque-seed@main/seed.enc
 ```
 
 **校验（必须对上，对不上就是载荷被换过 → 停止并报告）**
-- 体积 **5604 字节**
-- SHA-256 开头 **`375ad527`**
+- 体积 **6884 字节**
+- SHA-256 开头 **`78f6cab4`**（完整值 `78f6cab49c91f0d34e1558b67d6771e70d4f61b6d2da06495db2d5a7f29234df`）
 
-解密用 Fernet，解出 **3066 字符 / 81 行**，即 13 节凭据全量。
+解密用 Fernet，解出 **3781 字符 / 91 行**，即 **13 节凭据全量**（含 QQ 邮箱 SMTP 授权码 + 得到大脑 dedao API 双钥匙）。
+
+> ⚠️ **CDN 缓存坑（2026-09-10 实测）**：jsDelivr `@main` 有缓存，种子升级后仍会返回旧版
+> （本次 v1 5604B → v3.1 6884B 后，jsDelivr 仍返 5604B，raw.githubusercontent 已是 6884B）。
+> **判据以 raw.githubusercontent 为准**；若必须用 jsDelivr，把 `@main` 换成具体 commit sha
+> （如 `@66d10fdbe5`）绕过缓存。解出来若发现没有 `dedao` 节 = 拿到旧版，回退用 raw 重拉。
 
 ### B. 本地 vault（最快，已有环境首选）
 
